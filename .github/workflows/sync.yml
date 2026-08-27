@@ -2,15 +2,18 @@ name: Sync AREDL Data
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Auto-runs every 6 hours
-  workflow_dispatch: # Allows manual run button
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Fetch AREDL API Data
         run: |
