@@ -1,0 +1,27 @@
+name: Sync AREDL Data
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Auto-runs every 6 hours
+  workflow_dispatch: # Allows manual run button
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch AREDL API Data
+        run: |
+          curl -s -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
+               -H "Accept: application/json" \
+               "https://api.aredl.net/api/v2/levels" -o levels.json
+
+      - name: Commit and Push Updated File
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add levels.json
+          git commit -m "Update AREDL levels cache" || exit 0
+          git push
